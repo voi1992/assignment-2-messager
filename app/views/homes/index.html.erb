@@ -1,0 +1,101 @@
+<% if logged_in? %>
+
+    <div class="jumbotron">
+      <h1 class="display-3" style="text-align: center">Messages</h1>
+      <div class="text-xs-center" style="margin: 40px">
+        <a class="btn btn-primary btn-lg" style="float: inherit" href=<%= inbox_path %> role="button">Inbox</a>
+        <a class="btn btn-primary btn-lg" style="float: inherit" href=<%= outbox_path %> role="button">Outbox</a>
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">New Message
+        </button>
+      </div>
+
+    </div>
+<% end %>
+<% if @messages && params[:action] == "inbox" %>
+    <div class="list-group">
+      <% @messages.each do |message| %>
+          <div class="list-group-item">
+            <h3>
+              <p><%= link_to "#{message.title}", show_message_path(message_id: message.id) %> </p>
+            </h3>
+
+            <div class="row">
+            Message was sent by <%= message.user.username %> at <%= format_time(message.created_at) %>
+
+              <% if message.read %>
+                  <div style="float: right"><b>read</b></div>
+              <% else %>
+                  <div style="float: right"><b>unread</b></div>
+              <% end %>
+            </div>
+          </div>
+      <% end %>
+    </div>
+<% end %>
+
+<% if @messages && params[:action] == "outbox" %>
+    <div class="list-group">
+      <% @messages.each do |message| %>
+          <div class="list-group-item">
+            <h3>
+              <p><%= link_to "#{message.title}", show_message_path(message_id: message.id) %> </p>
+            </h3>
+            <div class="row">
+
+              Message sent to <%= User.find_by_id(message.receive_id).username %> at <%= format_time(message.created_at) %>
+              <% if message.read %>
+                  <div style="float: right"><b>read</b></div>
+              <% else %>
+                  <div style="float: right"><b>unread</b></div>
+              <% end %>
+            </div>
+          </div>
+      <% end %>
+    </div>
+<% end %>
+
+<% if @message && params[:action] == "show" %>
+
+    <div>
+      <h3>
+        <%= @message.title %>
+      </h3>
+
+      <p><%= @message.content %></p>
+    </div>
+<% end %>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">New Message</h4>
+      </div>
+      <%= form_tag newmessage_path, class: "form-horizontal" do %>
+          <div class="form-group">
+            <div class="modal-body">
+
+              <label for="email" class="form-control-label">To</label>
+              <%= text_field_tag :email, nil, class: "form-control" %>
+
+              <label for="title" class="form-control-label">title</label>
+              <%= text_field_tag :title, nil, class: "form-control" %>
+
+              <label for="content" class="form-control-label">Content</label>
+              <%= text_field_tag :content, nil, class: "form-control" %>
+
+
+            </div>
+            <div class="modal-footer">
+              <%= submit_tag "Send", class: "btn btn-primary" %>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

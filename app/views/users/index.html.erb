@@ -1,0 +1,12 @@
+<div class="list-group clearfix">
+  <% @users.each do |user| %>
+      <div class="list-group-item">
+        <div style="float:right">
+          <% if params[:friendlst].nil? %>
+              <%= link_to "Add friend", add_friend_path(friend_id: user.id), method: :post, class: "btn btn-outline-secondary" %>
+          <% end %>
+        </div>
+        <%= user.username %>
+      </div>
+  <% end %>
+</div>
