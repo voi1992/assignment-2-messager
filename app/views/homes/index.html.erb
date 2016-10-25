@@ -65,7 +65,7 @@
     </div>
 <% end %>
 
-
+<% if logged_in? %>
 <div class="modal fade" id="myModal" role="dialog">
   <div class="modal-dialog">
 
@@ -80,7 +80,7 @@
             <div class="modal-body">
 
               <label for="email" class="form-control-label">To</label>
-              <%= text_field_tag :email, nil, class: "form-control" %>
+              <%= select(nil,"email",options_for_select(User.where('id in (?)',current_user.friends.map(&:friend_id)).map(&:email)),{},{class:"form-control"})%>
 
               <label for="title" class="form-control-label">title</label>
               <%= text_field_tag :title, nil, class: "form-control" %>
@@ -99,3 +99,4 @@
     </div>
   </div>
 </div>
+<% end %>

@@ -5,7 +5,7 @@ class HomesController < ApplicationController
   end
 
   def new_messages
-
+    byebug
     current_user.sent_messages(message_params)
     render "homes/index"
   end
